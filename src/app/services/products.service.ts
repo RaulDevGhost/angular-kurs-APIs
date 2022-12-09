@@ -1,11 +1,20 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import {
+  HttpClient,
+  HttpParams,
+  HttpErrorResponse,
+  HttpStatusCode,
+} from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { retry, catchError, tap, map } from 'rxjs/operators';
+import { throwError } from 'rxjs';
 import {
   Product,
   CreateProductDTO,
   UpdateProductDTO,
 } from '../models/product.model';
+import { environment } from '../../environments/environment';
+import { NumberFormatStyle } from '@angular/common';
 
 @Injectable({
   providedIn: 'root',
@@ -13,7 +22,7 @@ import {
 export class ProductsService {
   constructor(private http: HttpClient) {}
 
-  private apiURL = 'https://young-sands-07814.herokuapp.com/api/products';
+  private apiURL = `${environment.API_URL}/api/products`;
 
   getAllProducts(limit?: number, offset?: number): Observable<Product[]> {
     let params = new HttpParams();
@@ -21,17 +30,52 @@ export class ProductsService {
       params = params.set('limit', limit);
       params = params.set('offset', offset);
     }
-    return this.http.get<Product[]>(`${this.apiURL}`, { params });
+    return this.http.get<Product[]>(`${this.apiURL}`, { params }).pipe(
+      retry(3),
+      map((products) =>
+        products.map((item) => {
+          return {
+            ...item,
+            tax: 0.19 * item.price,
+          };
+        })
+      )
+    );
   }
 
   // getProductsByPage(limit: number, offset: number): Observable<Product[]> {
   //   return this.http.get<Product[]>(`${this.apiURL}`, {
   //     params: { offset, limit },
-  //   });
+  //   }).pipe(retry(3));
   // }
 
+  private handleError(err: HttpErrorResponse): Observable<never> {
+    if (err.status === HttpStatusCode.Conflict) {
+      return throwError(() => `ERROR 500 -> ${err.message}`);
+    }
+    if (err.status === HttpStatusCode.NotFound) {
+      return throwError(
+        () => `ERROR 404 - The product does not exist -> ${err.message}`
+      );
+    }
+    if (err.status === HttpStatusCode.Unauthorized) {
+      return throwError(
+        () => `ERROR 404 - You are not Authorized -> ${err.message}`
+      );
+    }
+    return throwError(() => `ERROR SERVER -> ${err.message}`);
+  }
+
   getProduct(id: number): Observable<Product> {
-    return this.http.get<Product>(`${this.apiURL}/${id}`);
+    return this.http.get<Product>(`${this.apiURL}/${id}`).pipe(
+      map((data) => {
+        return {
+          ...data,
+          tax: 0.19 * data.price,
+        };
+      }),
+      catchError(this.handleError)
+    );
   }
 
   createProduct(product: CreateProductDTO): Observable<Product> {

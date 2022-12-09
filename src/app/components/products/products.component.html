@@ -1,6 +1,7 @@
 <div class="products--grid">
   <button (click)="createNewProduct()">NEW!!!</button>
   <button (click)="loadMore()">LOAD MORE</button>
+  {{ statusDetail }}
   <app-product
     (productEditDetail)="updateProduct($event)"
     (addProduct)="addingCart($event)"

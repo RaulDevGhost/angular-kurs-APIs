@@ -33,6 +33,7 @@ export class ProductComponent {
     },
     title: '',
     description: '',
+    tax: 0,
   };
   @Input() productDetail: Product = {
     id: 0,
@@ -49,6 +50,7 @@ export class ProductComponent {
     },
     title: '',
     description: '',
+    tax: 0,
   };
   @Output() productEditDetail = new EventEmitter<{
     changes: UpdateProductDTO;
@@ -66,6 +68,7 @@ export class ProductComponent {
   viewDetails(id: number) {
     this.showProductDetails = !this.showProductDetails;
     this.productId.emit(id);
+    console.log('productDetail', this.productDetail);
   }
 
   editingProduct(productDetail: Product, changes2: UpdateProductDTO) {

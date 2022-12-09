@@ -34,6 +34,7 @@
     <p>uploaded : {{ today | timeAgo }}</p>
     <p appHighlight>{{ productDetail.description }}</p>
     <p>{{ productDetail.category.name }}</p>
+    <p>{{ productDetail.tax }}</p>
     <button (click)="addToCart(productDetail)">ADD cart</button>
     <button (click)="editingProduct(productDetail, product)">EDIT</button>
     <button (click)="deleteProduct(productDetail.id)">DELETE</button>

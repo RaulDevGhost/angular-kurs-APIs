@@ -6,6 +6,7 @@ import {
 } from '../../models/product.model';
 import { StoreService } from '../../services/store.service';
 import { ProductsService } from '../../services/products.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-products',
@@ -35,6 +36,7 @@ export class ProductsComponent implements OnInit {
   };
   limit = 10;
   offset = 0;
+  statusDetail: 'loading' | 'success' | 'error' | 'init' = 'init';
 
   constructor(
     private storeService: StoreService,
@@ -61,8 +63,21 @@ export class ProductsComponent implements OnInit {
   }
 
   getProduct(id: number) {
-    this.productsService.getProduct(id).subscribe((res) => {
-      this.productDetail = res;
+    this.statusDetail = 'loading';
+    this.productsService.getProduct(id).subscribe({
+      next: (res) => {
+        (this.productDetail = res), (this.statusDetail = 'success');
+      },
+      error: (e) => {
+        this.statusDetail = 'error';
+        Swal.fire({
+          title: 'Error!',
+          text: e,
+          icon: 'error',
+          confirmButtonText: 'CLOSE',
+        });
+      },
+      complete: () => console.info('complete'),
     });
   }
 
