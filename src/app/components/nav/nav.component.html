@@ -33,6 +33,49 @@
     </nav>
     <div class="info">
       <div class="account">nicolas@nicolas.com</div>
+      <ul>
+        <li>
+          <a
+            routerLink="/products"
+            routerLinkActive="active"
+            ariaCurrentWhenActive="page"
+            >Products</a
+          >
+        </li>
+        <li>
+          <div *ngIf="token.length > 0; else elseBlock">
+            <!-- <p>{{ profile.name }}</p> -->
+            you are in
+          </div>
+          <ng-template #elseBlock>
+            <a
+              routerLink="/login"
+              routerLinkActive="active"
+              ariaCurrentWhenActive="page"
+              >Login</a
+            >
+          </ng-template>
+        </li>
+        <li>
+          <a
+            routerLink="/profile"
+            routerLinkActive="active"
+            ariaCurrentWhenActive="page"
+            >profile</a
+          >
+        </li>
+        <li>
+          <a
+            routerLink="/registration"
+            routerLinkActive="active"
+            ariaCurrentWhenActive="page"
+            >registration</a
+          >
+        </li>
+        <li>
+          <div (click)="downloadFile()">DOWNLOAD</div>
+        </li>
+      </ul>
       <div>
         <a href="">
           <img src="./assets/svg/icon_shopping_cart.svg" alt="logo" />

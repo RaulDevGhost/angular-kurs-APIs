@@ -7,14 +7,14 @@ import {
 } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { retry, catchError, tap, map } from 'rxjs/operators';
-import { throwError } from 'rxjs';
+import { throwError, zip } from 'rxjs';
 import {
   Product,
   CreateProductDTO,
   UpdateProductDTO,
 } from '../models/product.model';
 import { environment } from '../../environments/environment';
-import { NumberFormatStyle } from '@angular/common';
+import { checkTime } from '../interceptors/time.interceptor';
 
 @Injectable({
   providedIn: 'root',
@@ -30,17 +30,23 @@ export class ProductsService {
       params = params.set('limit', limit);
       params = params.set('offset', offset);
     }
-    return this.http.get<Product[]>(`${this.apiURL}`, { params }).pipe(
-      retry(3),
-      map((products) =>
-        products.map((item) => {
-          return {
-            ...item,
-            tax: 0.19 * item.price,
-          };
-        })
-      )
-    );
+    return this.http
+      .get<Product[]>(`${this.apiURL}`, { params, context: checkTime() })
+      .pipe(
+        retry(3),
+        map((products) =>
+          products.map((item) => {
+            return {
+              ...item,
+              tax: 0.19 * item.price,
+            };
+          })
+        )
+      );
+  }
+
+  testZip(id: number, changes: UpdateProductDTO) {
+    return zip(this.getProduct(id), this.updateProduct(id, changes));
   }
 
   // getProductsByPage(limit: number, offset: number): Observable<Product[]> {

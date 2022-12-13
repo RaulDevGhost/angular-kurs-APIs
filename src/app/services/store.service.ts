@@ -8,10 +8,11 @@ import { BehaviorSubject } from 'rxjs';
 export class StoreService {
   private shopingCart: Product[] = [];
   private myCart = new BehaviorSubject<Product[]>([]);
+  private token = '';
+  private getToken = new BehaviorSubject<string>('');
 
   myCart$ = this.myCart.asObservable();
-
-  constructor() {}
+  getToken$ = this.getToken.asObservable();
 
   addProduct(product: Product) {
     this.shopingCart.push(product);
@@ -24,5 +25,14 @@ export class StoreService {
 
   getTotal() {
     return this.shopingCart.reduce((sum, item) => sum + item.price, 0);
+  }
+
+  addToken(accessToken: string) {
+    this.token = accessToken;
+    this.getToken.next(this.token);
+  }
+
+  gettingToken() {
+    this.getToken.next(this.token);
   }
 }

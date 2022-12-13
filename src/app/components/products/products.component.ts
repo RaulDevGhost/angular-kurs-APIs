@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { zip } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 import {
   Product,
   CreateProductDTO,
@@ -7,6 +9,7 @@ import {
 import { StoreService } from '../../services/store.service';
 import { ProductsService } from '../../services/products.service';
 import Swal from 'sweetalert2';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-products',
@@ -51,6 +54,86 @@ export class ProductsComponent implements OnInit {
       console.log(this.products);
     });
   }
+
+  //CALBBACK HELL example
+  readAndUpdate(id: number): void {
+    this.productsService.getProduct(id).subscribe((data) => {
+      const product = data;
+      this.productsService
+        .updateProduct(product.id, { title: 'New title' })
+        .subscribe((rtaUpdated) => {
+          this.productsService.updateProduct(rtaUpdated.id, {
+            title: 'Second new title',
+          });
+        });
+    });
+  }
+
+  //solution with switchMap()
+  readAndUpdateSwitchMap(): void {
+    const id = 3;
+    // solution callback hell
+    this.productsService
+      .getProduct(id)
+      .pipe(
+        switchMap((product) => {
+          return forkJoin([
+            this.productsService.updateProduct(product.id, {
+              title: 'New title3',
+            }),
+            this.productsService.updateProduct(6, {
+              title: 'New title6',
+            }),
+            this.productsService.updateProduct(5, {
+              title: 'New title5',
+            }),
+          ]);
+        })
+      )
+      .subscribe((res) => {
+        // product updated
+        console.log(res);
+      });
+  }
+
+  readAndUpdateZip(): void {
+    //const id = 3;
+    // solution callback hell
+    // this.productsService.getProduct(id).pipe(
+    //   switchMap((product) =>
+    //     this.productsService.updateProduct(product.id, {
+    //       title: 'New title3',
+    //     })
+    //   ),
+    // );
+    // .subscribe((res) => {
+    //   // product updated
+    //   //console.log(res);
+    // });
+    zip(
+      this.productsService.getProduct(3),
+      this.productsService.updateProduct(6, {
+        title: 'New title6',
+      })
+    ).subscribe((response) => {
+      const product = response[0];
+      const product2 = response[1];
+      console.log('111', product);
+      console.log('2222', product2);
+    });
+  }
+
+  testZipService() {
+    const id = 3;
+    this.productsService
+      .testZip(id, { title: 'new title' })
+      .subscribe((resposes) => {
+        console.log('response one->', resposes[0]);
+        console.log('response one->', resposes[1]);
+      });
+  }
+
+  //END CALBBACK HELL example
 
   addingCart(product: Product) {
     if (!this.shopingCart.includes(product)) {
