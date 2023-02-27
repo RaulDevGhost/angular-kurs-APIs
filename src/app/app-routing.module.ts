@@ -4,6 +4,7 @@ import { LoginComponent } from './components/login/login.component';
 import { ProductsComponent } from './components/products/products.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { RegistrationComponent } from './components/registration/registration.component';
+import { QuantumProfileComponent } from './components/quantum-profile/quantum-profile.component';
 
 const routes: Routes = [
   { path: '', component: ProductsComponent },
@@ -11,6 +12,7 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'profile', component: ProfileComponent },
   { path: 'registration', component: RegistrationComponent },
+  { path: 'quatunprofile', component: QuantumProfileComponent },
 ];
 
 @NgModule({

@@ -1,0 +1,58 @@
+<!-- <div class="form-floating d-flex drop">
+  <button
+    id="floatingSelect"
+    class="btn btn-secondary dropdown-toggle dropbutton lightmode"
+    type="button"
+    data-bs-toggle="dropdown"
+    aria-expanded="false"
+  >
+    <div ref="labelselection" class="selection"> -->
+<!-- <div v-for="(value, key) in results" :key="key">
+        <div v-if="key < 3">
+          <div class="selected-value">{{ value }}</div>
+        </div>
+      </div> -->
+<!-- <div>TEST VALUE</div>
+    </div>
+  </button> -->
+<!-- <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+    <li *ngFor="let option of options" class="dropdown-item">
+      <label class="test">
+        <input
+          class="form-check-input radio-input"
+          type="checkbox"
+          ref="optionDownInput"
+          :value="option.name"
+
+          (click)="updateOptions(option)"
+        />
+        {{ option.name }}
+      </label>
+    </li>
+  </ul> -->
+<!-- <label
+    ref="labelstatus"
+    class="dropdown-label-placeholder"
+    style="padding: 1rem 2.5rem 1rem 0.75rem"
+    for="floatingSelect"
+    >TITLE TEST</label
+  > -->
+<!-- </div> -->
+<div>
+  <span (click)="showing()">{{ test }}</span>
+</div>
+<!-- <input type="checkbox" id="touch" /> -->
+<ul *ngIf="isShow" class="slide">
+  <li *ngFor="let option of options" class="dropdown-item">
+    <label class="test">
+      <input
+        class="form-check-input radio-input"
+        type="checkbox"
+        ref="optionDownInput"
+        [ngModel]="selectedIndex === option.id"
+        (click)="updateOptions($event, option)"
+      />
+      {{ option.name }}
+    </label>
+  </li>
+</ul>

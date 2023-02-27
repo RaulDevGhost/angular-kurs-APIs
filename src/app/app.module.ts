@@ -19,6 +19,9 @@ import { UsersComponent } from './components/users/users.component';
 import { RegistrationComponent } from './components/registration/registration.component';
 import { TimeInterceptor } from './interceptors/time.interceptor';
 import { TokenInterceptor } from './interceptors/token.interceptor';
+import { QuantumDropdownComponent } from './components/quantum-dropdown/quantum-dropdown.component';
+import { QuantumProfileComponent } from './components/quantum-profile/quantum-profile.component';
+import { QuantumEquipmentsComponent } from './components/quantum-equipments/quantum-equipments.component';
 
 @NgModule({
   declarations: [
@@ -34,6 +37,9 @@ import { TokenInterceptor } from './interceptors/token.interceptor';
     ProfileComponent,
     UsersComponent,
     RegistrationComponent,
+    QuantumDropdownComponent,
+    QuantumProfileComponent,
+    QuantumEquipmentsComponent,
   ],
   imports: [
     BrowserModule,
